@@ -8,11 +8,15 @@ Configura una maquina virtual Ubuntu utilizando Vagrant y Ansible. En este ejerc
 - Configurar locales y zona horaria
 - Crear usuarios y grupos con permisos específicos
 
+![alt text](docs/img/img1.png)
+
 ## Problema 2
 Aumenta la complejidad al desplegar un servicio web seguro. Deberás:
 - Instalar y configurar nginx   
 - Generar certificados SSL autofirmados para habilitar HTTPS
 - Configurar Reglas basicas del firewall (ufw) para permitir solo trafico SSH, HTTP y HTTPS
+
+![alt text](docs/img/img1.png)
 
 ## Problema 3 
 Despliega una aplicación web en mujltiples instancias y configura un balanceador de carga
@@ -35,6 +39,9 @@ los resultados son:
 - nginx balanceando el trafico entra las instancias 
 - acceso al servicio a traves de http://localhost
 
+![alt text](docs/img/img3.png)
+
+![alt text](docs/img/img3_1.png)
 
 ## Problema 4 
 Implementa soluciones de monitoreo y alertas: , Instalar y configurar Prometheus y Grafana. 
@@ -51,3 +58,5 @@ d. Configurar alertas en Prometheus.
 4. Modificar la aplicación Flask para exponer métricas. Actualiza la aplicación para que exponga métricas compatibles con Prometheus.
 5. Asegurarte de instalar las dependencias necesarias.
 
+
+## Problema 5

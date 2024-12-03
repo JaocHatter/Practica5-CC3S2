@@ -11,7 +11,7 @@
   user:
     name: devuser
     shell: /bin/bash
-    password: 'nM231@dna?w1E' 
+    password: "{{ 'nM231@dna?w1E' | password_hash('sha512') }}" 
 
 - name: Asignar a devuser al grupo de desarrolladores
   user:
