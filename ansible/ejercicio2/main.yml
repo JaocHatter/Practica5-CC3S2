@@ -1,0 +1,44 @@
+- name: Actualizar los paquetes
+  apt:
+    update_cache: yes
+
+- name: Instalar el paquete nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Permitir SSH en el puerto 22
+  ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: Permitir HTTP en el puerto 80
+  ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+
+- name: Permitir HTTPS en el puerto 443
+  ufw:
+    rule: allow
+    port: '443'
+    proto: tcp
+
+- name: Permitir acceso al puerto 5000
+  ufw:
+    rule: allow
+    port: '5000'
+    proto: tcp
+
+- name: Evitar el abuso del puerto 5000
+  ufw:
+    rule: limit
+    port: '5000'
+    proto: tcp
+    
+- name: Bloquear el tráfico restante
+  ufw:
+    state: enabled
+    policy: deny
+    direction: incoming
