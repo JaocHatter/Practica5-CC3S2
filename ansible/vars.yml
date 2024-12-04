@@ -1,0 +1,8 @@
+service_image: grafana/grafana:latest
+service_name: grafana
+db_name: mydb
+db_user: jared
+db_password: password
+db_root_password: admin
+db_host: db
+db_port: 3306
