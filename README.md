@@ -16,7 +16,17 @@ Aumenta la complejidad al desplegar un servicio web seguro. Deberás:
 - Generar certificados SSL autofirmados para habilitar HTTPS
 - Configurar Reglas basicas del firewall (ufw) para permitir solo trafico SSH, HTTP y HTTPS
 
-![alt text](docs/img/img1.png)
+Todas las tareas fueron ejecutadas de manera exitosa
+
+![alt text](docs/img/img2.png)
+
+status de nginx se muestra como activo dentro de la maquina virtual 
+
+![alt text](docs/img/img2_1.png)
+
+Nginx instalado y sirviendo en HTTPS. (completado)
+Acceso al sitio web mediante https://localhost. (completado) 
+Firewall configurado adecuadamente. (completado)
 
 ## Problema 3 
 Despliega una aplicación web en mujltiples instancias y configura un balanceador de carga
@@ -34,14 +44,23 @@ Además es necesario crear plantillas necesarias como:
 1. la plantilla de aplicacion de Flask 
 2. plantilla para los archivos de servicios systemd  
 3. plantilla de configuracion de nginx 
-los resultados son:
-- aplicacion de flask corriendo en multiples instancias en puertos diferentes
-- nginx balanceando el trafico entra las instancias 
-- acceso al servicio a traves de http://localhost
+
+Ejecución de las tareas, exitosa
 
 ![alt text](docs/img/img3.png)
 
+Request a uno de los endpoints
+
 ![alt text](docs/img/img3_1.png)
+
+Multiple instancias de aplicaciones con flask activas (puertos 8001 y 8002)
+
+![alt text](docs/img/img3_2.png)
+
+### Los resultados son:
+- aplicacion de flask corriendo en multiples instancias en puertos diferentes (completado)
+- nginx balanceando el trafico entra las instancias (completado)
+- acceso al servicio a traves de http://localhost 
 
 ## Problema 4 
 Implementa soluciones de monitoreo y alertas: , Instalar y configurar Prometheus y Grafana. 
