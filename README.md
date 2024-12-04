@@ -47,18 +47,59 @@ los resultados son:
 Implementa soluciones de monitoreo y alertas: , Instalar y configurar Prometheus y Grafana. 
 - Configurar alertas básicas en Prometheus.
 - Integrar métricas de la aplicación Flask.
-Instrucciones
+### Instrucciones
 1. Actualizar site.yml. Agrega la importación de ansible/ejercicio4/main.yml. 
 2. Crear las tareas en ansible/ejercicio4/main.yml. Implementa tareas para: 
-a. Instalar Prometheus y Node Exporter.
-b. Configurar Prometheus para recopilar métricas de los servicios. 
-c. Instalar Grafana y configurar su servicio.
-d. Configurar alertas en Prometheus.
+- Instalar Prometheus y Node Exporter.
+- Configurar Prometheus para recopilar métricas de los servicios. 
+- Instalar Grafana y configurar su servicio.
+- Configurar alertas en Prometheus.
 3. Crear el manejador para reiniciar Prometheus.
 4. Modificar la aplicación Flask para exponer métricas. Actualiza la aplicación para que exponga métricas compatibles con Prometheus.
 5. Asegurarte de instalar las dependencias necesarias.
 
-## Problema 9
+
+## Problema 8 - Contenerización de la aplicación con Docker
+
+Empaqueta la aplicación Flask en un contenedor Docker.
+Escribe un Dockerfile que construya la imagen de la aplicación. Configura un registro de
+contenedores local o utiliza un registro público. Modifica el despliegue para usar
+contenedores en lugar de servicios systemd.
+### Instrucciones
+1. **Crear el Dockerfile**
+
+- Define las etapas necesarias para construir la imagen de la aplicación. b. Incluye
+instalación de dependencias y configuración de la aplicación. 
+2. **Actualizar site.yml Agrega la importación de ansible/ejercicio8/main.yml.** 
+3. **Crear las tareas en ansible/ejercicio8/main.yml Implementa tareas para:**
+- Instalar Docker en el sistema.
+- Construir la imagen de Docker utilizando el Dockerfile.
+- Ejecutar contenedores de la aplicación en los puertos necesarios.
+- Configurar Nginx para balancear carga entre los contenedores.
+4. **Gestionar imágenes y contenedores**
+- Implementa tareas para gestionar versiones de imágenes.
+- Configura limpieza automática de imágenes y contenedores antiguos.
+5. **Integrar con el proceso de despliegue**
+- Asegúrate de que el despliegue con Ansible ahora utiliza contenedores Docker en
+lugar de servicios systemd.
+
+Ejecucion exitosa
+
+![alt text](docs/img/img8.png)
+
+Se puede visualizar como al entrar a la maquina virtual la aplicación se encuentra activa.
+
+![alt text](docs/img/img8_1.png)
+
+
+## Resultados esperados
+- Aplicación Flask empaquetada en una imagen Docker. (completado)
+- Despliegue de la aplicación utilizando contenedores Docker. (completado)
+- Nginx balanceando carga entre los contenedores en ejecución. (no completado)
+
+
+
+## Problema 9 - Orquestación de contenedores con Docker Compose
 Utiliza Docker Compose para orquestar los servicios de la aplicación.
 Define un archivo docker-compose.yml que describa la aplicación, base de datos y otros
 servicios.
@@ -76,10 +117,7 @@ tareas en ansible/ejercicio9/main.yml Implementa tareas para:
 4. Gestionar la configuración
 a. Utiliza variables y plantillas en Ansible para parametrizar el archivo docker-
 compose.yml.
-### Resultados esperados
-- Servicios de la aplicación orquestados con Docker Compose.
-- Despliegue simplificado y gestión de múltiples contenedores.
-- Posibilidad de escalar servicios fácilmente.
+
 
 Ejecucion exitosa
 
@@ -88,3 +126,8 @@ Ejecucion exitosa
 Como servicio segundo servicio elegí Grafana, se pueden visualizar los 2 servicios corriendo en contenedores dentro de la maquina virtual.
 
 ![alt text](docs/img/img9_1.png)
+
+### Resultados esperados
+- Servicios de la aplicación orquestados con Docker Compose. (completado)
+- Despliegue simplificado y gestión de múltiples contenedores. (completado)
+- Posibilidad de escalar servicios fácilmente. (completado)
