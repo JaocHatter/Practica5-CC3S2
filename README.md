@@ -2,8 +2,8 @@
 **Nombre y Apellido:** Jared Orihuela Contreras
 **Código:** 20220370F
 ### Ejecución de cada ejecicio
-Tendrá que entrar a la carpeta "vagrant" y ejecutar "vagrant up" para la construcción de cada maquina virtual de cada problema que elija en "site.yml" (puede elegir removiendo el numeral del ejercicio que eligió).
-**Note: ** Recuerde realizar "vagrant destroy" cada vez que cambie de problema
+Tendrá que entrar a la carpeta "vagrant" y ejecutar "vagrant up" para la construcción de cada maquina virtual de cada problema que elija en "site.yml" (puede elegir removiendo el numeral del ejercicio que eligió).<br>
+**Note:** Recuerde realizar "vagrant destroy" cada vez que cambie de problema<br>
 
 ## Problema 1
 Configura una maquina virtual Ubuntu utilizando Vagrant y Ansible. En este ejercicio, deberás:
@@ -153,3 +153,8 @@ Como servicio segundo servicio elegí Grafana, se pueden visualizar los 2 servic
 - Servicios de la aplicación orquestados con Docker Compose. (completado)
 - Despliegue simplificado y gestión de múltiples contenedores. (completado)
 - Posibilidad de escalar servicios fácilmente. (completado)
+
+---
+## Para el problema 8 y 9 
+Seguí los pasos y código brindados en este video:
+https://www.youtube.com/watch?v=8qxEufeSJrM&ab_channel=MostlyCode
