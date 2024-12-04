@@ -1,6 +1,9 @@
 # Practica 5
 **Nombre y Apellido:** Jared Orihuela Contreras
 **Código:** 20220370F
+### Ejecución de cada ejecicio
+Tendrá que entrar a la carpeta "vagrant" y ejecutar "vagrant up" para la construcción de cada maquina virtual de cada problema que elija en "site.yml" (puede elegir removiendo el numeral del ejercicio que eligió).
+**Note: ** Recuerde realizar "vagrant destroy" cada vez que cambie de problema
 
 ## Problema 1
 Configura una maquina virtual Ubuntu utilizando Vagrant y Ansible. En este ejercicio, deberás:
