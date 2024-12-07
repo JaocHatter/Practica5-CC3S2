@@ -1,0 +1,7 @@
+- name: Reiniciar app
+  systemd:
+    name: flask_app_{{ item }}
+    state: restarted
+  loop:
+    - 5000
+    - 5001

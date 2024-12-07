@@ -1,0 +1,104 @@
+- name: Instalar prometheus y python
+  apt: 
+    name:
+      - prometheus
+      - prometheus-node-exporter # dependencia para monitorear el uso de CPU
+      - python3-pip
+    state: present
+    update_cache: yes
+  
+- name: Instalar Grafana
+  apt:
+    deb: https://dl.grafana.com/oss/release/grafana_10.0.3_amd64.deb
+    state: present
+  
+- name: Instalar librerias de python necesarias
+  pip:
+    name: 
+      - prometheus_client
+      - Flask
+      - flask-prometheus-metrics
+    state: present
+
+- name: Crear directorio de configuración Prometheus
+  file: # Crear directorio
+    path: /etc/prometheus 
+    state: directory
+    mode: '0755' # Permisos al propietario para Read,Write y Ejecución, si no es el propietario RO/EO
+
+- name: Crear directorio para la aplicación Flask
+  file:
+    path: /opt/flask_app
+    state: directory
+
+- name: Configuramos prometheus
+  template: # usaremos una plantilla de nuestro local 
+    src: ../templates/prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+  notify: Reiniciar prometheus
+
+- name: Setear reglas de alerta
+  template:
+    src: ../templates/alert_rules.yml.j2
+    dest: /etc/prometheus/alert_rules.yml
+  notify: Reiniciar prometheus
+
+- name: Permitir puertos
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  with_items:
+    - '9090' # puerto disponible para prometheus
+    - '3000' # puerto disponible para grafana
+    - '9100' # puerto disponible para node-exporter
+  notify: Reiniciar ufw
+
+
+
+- name: Iniciar aplicaciones en Flask
+  template:
+    src: ../templates/flask_app_metrics.py.j2 
+    dest: "/opt/flask_app/flask_app_{{ item }}.py" #aplicaciones distintas 
+  with_items:
+    - 5000
+    - 5001
+  notify: Reiniciar app
+
+- name: Asegurar que prometheus está ejecutándose
+  systemd:
+    name: prometheus
+    state: started
+    enabled: yes
+
+- name: Asegurar que Grafana esta ejecutandose
+  systemd:
+    name: grafana-server
+    state: started
+    enabled: yes
+
+- name: esperar que grafana-server se encuentre disponible
+  uri:
+    url: http://localhost:3000
+    status_code: 200
+    timeout: 60
+  register: result
+  until: result.status == 200
+  retries: 30
+  delay: 2
+
+- name: Establecer a prometheus como la base de datos de Grafana
+  uri:
+    url: http://localhost:3000/api/datasources
+    method: POST
+    user: admin
+    password: admin
+    force_basic_auth: yes
+    body_format: json
+    body:
+      name: Prometheus
+      type: prometheus
+      url: http://localhost:9090
+      access: proxy
+      isDefault: true
+    status_code: 200,409
