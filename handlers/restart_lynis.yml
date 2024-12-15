@@ -1,0 +1,4 @@
+- name: Reiniciar lynis
+  systemd:
+    name: lynis
+    state: restarted

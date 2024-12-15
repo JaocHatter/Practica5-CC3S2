@@ -1,78 +1,92 @@
-- name: Instalar prometheus y python
+- name: Instalar dependencias
   apt: 
     name:
       - prometheus
-      - prometheus-node-exporter # dependencia para monitorear el uso de CPU
+      - prometheus-node-exporter
       - python3-pip
-    state: present
     update_cache: yes
-  
-- name: Instalar Grafana
+    state: present  # Corroborar si han sido instaladas
+
+- name: Instalar grafana
   apt:
-    deb: https://dl.grafana.com/oss/release/grafana_10.0.3_amd64.deb
+    deb: https://dl.grafana.com/enterprise/release/grafana-enterprise_11.4.0_amd64.deb
     state: present
-  
-- name: Instalar librerias de python necesarias
+
+- name: Instalar librerias de python necesaria
   pip:
-    name: 
-      - prometheus_client
+    name:
       - Flask
+      - prometheus_client
+      - gunicorn
       - flask-prometheus-metrics
     state: present
 
-- name: Crear directorio de configuración Prometheus
-  file: # Crear directorio
-    path: /etc/prometheus 
-    state: directory
-    mode: '0755' # Permisos al propietario para Read,Write y Ejecución, si no es el propietario RO/EO
-
-- name: Crear directorio para la aplicación Flask
+- name: Crear carpeta para prometheus
   file:
-    path: /opt/flask_app
+    path: /etc/prometheus
     state: directory
+    mode: '0755' # R,W,E
 
-- name: Configuramos prometheus
-  template: # usaremos una plantilla de nuestro local 
+- name: Importar configuraciones de prometheus 
+  template:
     src: ../templates/prometheus.yml.j2
     dest: /etc/prometheus/prometheus.yml
   notify: Reiniciar prometheus
 
-- name: Setear reglas de alerta
+- name: Importar las alert_rules 
   template:
     src: ../templates/alert_rules.yml.j2
     dest: /etc/prometheus/alert_rules.yml
   notify: Reiniciar prometheus
-
+  
 - name: Permitir puertos
   ufw:
     rule: allow
     port: "{{ item }}"
     proto: tcp
-  with_items:
-    - '9090' # puerto disponible para prometheus
-    - '3000' # puerto disponible para grafana
-    - '9100' # puerto disponible para node-exporter
+  loop:
+    - '3000'
+    - '9090'
+    - '9100'
   notify: Reiniciar ufw
 
+- name: Crear carpetas para aplicaciones en Flask
+  file:
+    path: /opt/flask_app
+    state: directory 
 
-
-- name: Iniciar aplicaciones en Flask
+- name: Copiar aplicaciones en Flask
   template:
-    src: ../templates/flask_app_metrics.py.j2 
-    dest: "/opt/flask_app/flask_app_{{ item }}.py" #aplicaciones distintas 
-  with_items:
+    src: ../templates/flask_app_metrics.py.j2
+    dest: "/opt/flask_app/flask_app_{{ item }}.py"
+  loop:
+    - '5000'
+    - '5001'
+
+# Ahora debemos crear servicios para la aplicación de Flask
+- name: Crear servicio de flask
+  template:
+    src: ../templates/flask_app.service.j2
+    dest: /etc/systemd/system/flask_app_{{ item }}.service
+  loop:
     - 5000
     - 5001
-  notify: Reiniciar app
+  notify:
+    - Reiniciar systemd
+    - Reiniciar app
 
-- name: Asegurar que prometheus está ejecutándose
+# Iniciar los servicios de flask
+- name: Iniciar aplicaciones
   systemd:
-    name: prometheus
-    state: started
+    name: flask_app_{{ item }}
     enabled: yes
-
-- name: Asegurar que Grafana esta ejecutandose
-  systemd:
+    state: started # Con esto indicamos que no continuaremos hasta que el estado sea "started"
+  loop:
+    - 5000
+    - 5001
+  
+- name: Asegurar que grafana está activo
+  systemd: 
     name: grafana-server
     state: started
     enabled: yes
@@ -93,7 +107,7 @@
     method: POST
     user: admin
     password: admin
-    force_basic_auth: yes
+    force_basic_auth: yes 
     body_format: json
     body:
       name: Prometheus

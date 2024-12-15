@@ -1,0 +1,49 @@
+- name: Actualizar los paquetes
+  apt:
+    update_cache: yes
+    state: present
+
+- name: Instalar nginx
+  apt: 
+    name: nginx 
+    state: present
+  notify: Reiniciar nginx
+
+- name: Instalar Lynis
+  apt:
+    name: lynis
+    state: present
+  notify: Reiniciar lynis
+
+
+- name: Instalar apparmor
+  apt: 
+    name: 
+      - apparmor
+      - apparmor-utils
+    state: present
+
+# Endurecer la configuración de servicios clave
+- name: Asegurar nginx
+  template:
+    src: ../templates/security.conf
+    dest: /etc/nginx/conf.d/security.conf
+  notify: Reiniciar nginx
+
+# Endurecer la configuración del servicio SSH
+- name: Asegurar SSH
+  template: 
+    src: ../templates/ssh_config.j2
+    dest: /etc/ssh/ssh_config.d/ssh_config.conf
+  notify: Reiniciar sshd
+
+  # Ejecutar escaneo de seguridad
+- name: Ejecutar escaneo
+  become: yes # Dar permisos root para una busqueda más profunda
+  shell: lynis audit system
+  register: lynis_output
+
+- name: Guardar escaneo
+  copy:
+    content: "{{ lynis_output.stdout }}"
+    dest: /var/log/lynis_report.txt
